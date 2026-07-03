@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="text-center mt-5">
+
+    <h1 class="text-success">
+
+        ✅ Order Placed Successfully!
+
+    </h1>
+
+    <h3 class="mt-4">
+
+        Order Number:
+        #{{ order.id }}
+
+    </h3>
+
+    <h3>
+
+        Total Paid:
+        KSh {{ total }}
+
+    </h3>
+
+    <a href="{% url 'orders' %}"
+       class="btn btn-success mt-4">
+
+        View My Orders
+
+    </a>
+
+    <a href="{% url 'home' %}"
+       class="btn btn-primary mt-4">
+
+        Continue Shopping
+
+    </a>
+
+</div>
+
+{% endblock %}
