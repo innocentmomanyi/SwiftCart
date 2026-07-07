@@ -46,6 +46,104 @@ body{
 footer{
     margin-top:80px;
 }
+
 html{
-    scroll-behavior: smooth;
+    scroll-behavior:smooth;
+}
+
+
+/* =======================================
+   REVIEW SECTION
+======================================= */
+
+.review-card{
+
+    border-left:5px solid #198754;
+
+    border-radius:12px;
+
+    transition:.3s;
+
+}
+
+.review-card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+.review-stars{
+
+    color:#ffc107;
+
+    font-size:20px;
+
+}
+
+.verified-badge{
+
+    font-size:13px;
+
+}
+
+
+/* =======================================
+   STAR RATING FORM
+======================================= */
+
+.star-rating{
+
+    margin-top:10px;
+
+}
+
+.star-rating ul{
+
+    list-style:none;
+
+    padding-left:0;
+
+}
+
+.star-rating li{
+
+    margin-bottom:10px;
+
+}
+
+.star-rating input{
+
+    transform:scale(1.2);
+
+    margin-right:10px;
+
+}
+
+.star-rating label{
+
+    color:#ffc107;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.star-rating label:hover{
+
+    transform:scale(1.1);
+
+}
+
+
+/* =======================================
+   REVIEW TEXTAREA
+======================================= */
+
+textarea{
+
+    resize:none;
+
 }

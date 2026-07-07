@@ -30,15 +30,18 @@
 
         </h5>
 
-        <!-- Product Rating -->
+        <h5 class="review-stars mt-3">
 
-        <h5 class="text-warning mt-3">
-
-            ⭐ {{ product.rating }}/5
+            ⭐ {{ product.average_rating }}/5
 
         </h5>
 
-        <!-- Product Price -->
+        <p class="text-muted">
+
+            {{ product.review_count }}
+            Review{{ product.review_count|pluralize }}
+
+        </p>
 
         <h2 class="text-primary mt-3">
 
@@ -64,7 +67,7 @@
 
         <p>
 
-            <strong>Stock Available:</strong>
+            <strong>Stock:</strong>
 
             {{ product.stock }}
 
@@ -72,7 +75,7 @@
 
         {% if product.stock > 10 %}
 
-            <span class="badge bg-success mb-3">
+            <span class="badge bg-success">
 
                 In Stock
 
@@ -80,7 +83,7 @@
 
         {% elif product.stock > 0 %}
 
-            <span class="badge bg-warning text-dark mb-3">
+            <span class="badge bg-warning text-dark">
 
                 Only {{ product.stock }} left
 
@@ -88,7 +91,7 @@
 
         {% else %}
 
-            <span class="badge bg-danger mb-3">
+            <span class="badge bg-danger">
 
                 Out of Stock
 
@@ -96,36 +99,251 @@
 
         {% endif %}
 
-        <br>
+        <br><br>
 
         {% if product.stock > 0 %}
 
-        <a href="{% url 'add_to_cart' product.id %}"
-           class="btn btn-success btn-lg mt-3">
+        <a
+            href="{% url 'add_to_cart' product.id %}"
+            class="btn btn-success">
 
             🛒 Add to Cart
 
         </a>
 
-        {% else %}
-
-        <button class="btn btn-secondary btn-lg mt-3" disabled>
-
-            Out of Stock
-
-        </button>
-
         {% endif %}
 
-        <a href="{% url 'home' %}"
-           class="btn btn-outline-primary btn-lg mt-3">
+        <a
+            href="{% url 'home' %}"
+            class="btn btn-outline-primary">
 
-            ← Continue Shopping
+            Continue Shopping
 
         </a>
 
     </div>
 
 </div>
+
+
+<!-- ================= CUSTOMER REVIEWS ================= -->
+
+<hr class="my-5">
+
+<h3>
+
+    Customer Reviews
+
+</h3>
+
+{% if product.reviews.all %}
+
+    {% for review in product.reviews.all %}
+
+    <div class="card review-card mb-3">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between">
+
+                <h5>
+
+                    👤 {{ review.user.username }}
+
+                </h5>
+
+                <span class="badge bg-success verified-badge">
+
+                    ✔ Verified Purchase
+
+                </span>
+
+            </div>
+
+            <p class="review-stars">
+
+                {% for i in "12345" %}
+
+                    {% if forloop.counter <= review.rating %}
+
+                        ★
+
+                    {% else %}
+
+                        ☆
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </p>
+
+            <p>
+
+                {{ review.comment }}
+
+            </p>
+
+            <small class="text-muted">
+
+                {{ review.created_at|date:"d M Y H:i" }}
+
+            </small>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+
+<div class="alert alert-info">
+
+    No customer reviews yet.
+
+</div>
+
+{% endif %}
+
+
+
+<!-- ================= REVIEW FORM ================= -->
+
+<hr class="my-5">
+
+{% if user.is_authenticated %}
+
+    {% if can_review %}
+
+        <div class="card shadow">
+
+            <div class="card-body">
+
+                {% if existing_review %}
+
+                    <h3>
+
+                        Edit Your Review
+
+                    </h3>
+
+                {% else %}
+
+                    <h3>
+
+                        Write a Review
+
+                    </h3>
+
+                {% endif %}
+
+                <form
+                    method="POST"
+                    action="{% url 'submit_review' product.id %}">
+
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+
+                            Rating
+
+                        </label>
+
+                        <div class="star-rating">
+
+                            {% for radio in form.rating %}
+
+                                <div class="form-check">
+
+                                    {{ radio.tag }}
+
+                                    <label class="form-check-label review-stars">
+
+                                        {{ radio.choice_label }}
+
+                                    </label>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Comment
+
+                        </label>
+
+                        {{ form.comment }}
+
+                    </div>
+
+                    {% if existing_review %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-warning">
+
+                            Update Review
+
+                        </button>
+
+                    {% else %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary">
+
+                            Submit Review
+
+                        </button>
+
+                    {% endif %}
+
+                </form>
+
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-warning">
+
+            <strong>
+
+                Only customers who have purchased this product can review it.
+
+            </strong>
+
+        </div>
+
+    {% endif %}
+
+{% else %}
+
+<div class="alert alert-info">
+
+    Please
+
+    <a href="{% url 'login' %}">
+
+        login
+
+    </a>
+
+    to write a review.
+
+</div>
+
+{% endif %}
 
 {% endblock %}
