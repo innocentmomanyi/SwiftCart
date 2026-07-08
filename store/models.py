@@ -18,7 +18,9 @@ class Product(models.Model):
         on_delete=models.CASCADE
     )
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(
+        max_length=200
+    )
 
     slug = models.SlugField(
         unique=True,
@@ -141,13 +143,23 @@ class OrderItem(models.Model):
 
     product = models.ForeignKey(
         Product,
-        on_delete=models.CASCADE
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    # Stores the product name at the time of purchase
+    product_name = models.CharField(
+        max_length=200,
+        blank=True,
+        default=""
     )
 
     quantity = models.PositiveIntegerField(
         default=1
     )
 
+    # Stores the price paid at the time of purchase
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2
@@ -157,7 +169,11 @@ class OrderItem(models.Model):
         return self.price * self.quantity
 
     def __str__(self):
-        return self.product.name
+
+        if self.product_name:
+            return self.product_name
+
+        return "Order Item"
 
 
 class Review(models.Model):

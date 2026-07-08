@@ -10,7 +10,7 @@
 
 {% for order in orders %}
 
-<div class="card mb-4">
+<div class="card mb-4 shadow">
 
     <div class="card-header">
 
@@ -26,13 +26,17 @@
 
         |
 
-        {{ order.status }}
+        <span class="badge bg-primary">
+
+            {{ order.status }}
+
+        </span>
 
     </div>
 
     <div class="card-body">
 
-        <table class="table">
+        <table class="table table-hover">
 
             <thead>
 
@@ -56,13 +60,57 @@
 
             <tr>
 
-                <td>{{ item.product.name }}</td>
+                <td>
 
-                <td>{{ item.quantity }}</td>
+                    <strong>
 
-                <td>KSh {{ item.price }}</td>
+                        {{ item.product_name }}
 
-                <td>KSh {{ item.subtotal }}</td>
+                    </strong>
+
+                    {% if not item.product %}
+
+                    <br>
+
+                    <small class="text-danger">
+
+                        Product no longer available
+
+                    </small>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    {{ item.quantity }}
+
+                </td>
+
+                <td>
+
+                    KSh {{ item.price }}
+
+                </td>
+
+                <td>
+
+                    KSh {{ item.subtotal }}
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="4" class="text-center text-muted">
+
+                    No items found for this order.
+
+                </td>
 
             </tr>
 
@@ -74,8 +122,7 @@
 
         <h4 class="text-end">
 
-            Total:
-            KSh {{ order.total_amount }}
+            Total: KSh {{ order.total_amount }}
 
         </h4>
 
@@ -87,7 +134,7 @@
 
 <div class="alert alert-info">
 
-    No orders found.
+    You haven't placed any orders yet.
 
 </div>
 

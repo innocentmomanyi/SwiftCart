@@ -434,67 +434,47 @@ def remove_from_cart(request, item_id):
 def checkout(request):
 
     cart_items = Cart.objects.filter(
-
         user=request.user
-
     )
 
     if not cart_items.exists():
-
         return redirect("cart")
 
     total = sum(
-
         item.total_price()
-
         for item in cart_items
-
     )
 
     order = Order.objects.create(
-
         user=request.user,
-
         total_amount=total
-
     )
 
     for item in cart_items:
 
         OrderItem.objects.create(
-
             order=order,
-
             product=item.product,
-
+            product_name=item.product.name,
             quantity=item.quantity,
-
-            price=item.product.price,
-
+            price=item.product.price
         )
 
+        # Reduce stock
         item.product.stock -= item.quantity
-
         item.product.save()
 
+    # Empty the customer's cart
     cart_items.delete()
 
     return render(
-
         request,
-
         "checkout_success.html",
-
         {
-
             "order": order,
-
-            "total": total,
-
-        },
-
+            "total": total
+        }
     )
-
 
 # ==========================
 # MY ORDERS
